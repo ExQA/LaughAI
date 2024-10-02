@@ -7,6 +7,7 @@ import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
 public class ChatGPTBot extends TelegramLongPollingBot {
     private ChatGPTService chatGPTService;
+    private ImageGenerationService imageGenerationService;
     private String botToken;
     private String botUsername;
     private String openAiApiKey;
@@ -17,6 +18,7 @@ public class ChatGPTBot extends TelegramLongPollingBot {
         this.botUsername = configLoader.getBotUsername();
         this.openAiApiKey = configLoader.getOpenAiApiKey();
         chatGPTService = new ChatGPTService(openAiApiKey); // Инициализируем ChatGPTService
+        imageGenerationService = new ImageGenerationService(openAiApiKey); // Инициализируем ImageGenerationService
     }
 
     @Override
@@ -26,19 +28,44 @@ public class ChatGPTBot extends TelegramLongPollingBot {
             String messageText = update.getMessage().getText();
             long chatId = update.getMessage().getChatId();
 
-            // Получаем ответ от ChatGPT
-            String responseText = chatGPTService.getChatGPTResponse(messageText);
+            if (messageText.startsWith("/generateImage ")) { // Проверяем, начинается ли сообщение с команды генерации изображения
+                String prompt = messageText.substring(15); // Извлекаем текст запроса
+                try {
+                    String imageUrl = imageGenerationService.generateImage(prompt); // Генерируем изображение
+                    SendMessage message = new SendMessage();
+                    message.setChatId(String.valueOf(chatId));
+                    message.setText(imageUrl); // Отправляем ссылку на изображение
+                    execute(message); // Отправляем сообщение пользователю
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    sendErrorMessage(chatId, "Не удалось сгенерировать изображение."); // Отправляем сообщение об ошибке
+                }
+            } else {
+                // Получаем ответ от ChatGPT
+                String responseText = chatGPTService.getChatGPTResponse(messageText);
 
-            // Создаем ответное сообщение
-            SendMessage message = new SendMessage();
-            message.setChatId(String.valueOf(chatId));
-            message.setText(responseText);
+                // Создаем ответное сообщение
+                SendMessage message = new SendMessage();
+                message.setChatId(String.valueOf(chatId));
+                message.setText(responseText);
 
-            try {
-                execute(message); // Отправляем сообщение пользователю
-            } catch (TelegramApiException e) {
-                e.printStackTrace(); // Логируем ошибку, если не удалось отправить сообщение
+                try {
+                    execute(message); // Отправляем сообщение пользователю
+                } catch (TelegramApiException e) {
+                    e.printStackTrace(); // Логируем ошибку, если не удалось отправить сообщение
+                }
             }
+        }
+    }
+
+    private void sendErrorMessage(long chatId, String errorMessage) {
+        SendMessage message = new SendMessage();
+        message.setChatId(String.valueOf(chatId));
+        message.setText(errorMessage);
+        try {
+            execute(message);
+        } catch (TelegramApiException e) {
+            e.printStackTrace();
         }
     }
 
