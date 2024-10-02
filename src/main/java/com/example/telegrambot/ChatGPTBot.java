@@ -2,6 +2,7 @@ package com.example.telegrambot;
 
 import org.telegram.telegrambots.bots.TelegramLongPollingBot;
 import org.telegram.telegrambots.meta.api.methods.send.SendMessage;
+import org.telegram.telegrambots.meta.api.methods.send.SendPhoto;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;
 
@@ -31,11 +32,8 @@ public class ChatGPTBot extends TelegramLongPollingBot {
             if (messageText.startsWith("/generateImage ")) { // Проверяем, начинается ли сообщение с команды генерации изображения
                 String prompt = messageText.substring(15); // Извлекаем текст запроса
                 try {
-                    String imageUrl = imageGenerationService.generateImage(prompt); // Генерируем изображение
-                    SendMessage message = new SendMessage();
-                    message.setChatId(String.valueOf(chatId));
-                    message.setText(imageUrl); // Отправляем ссылку на изображение
-                    execute(message); // Отправляем сообщение пользователю
+                    // Генерируем изображение и отправляем его в Telegram
+                    imageGenerationService.generateImage(prompt, chatId, this);
                 } catch (Exception e) {
                     e.printStackTrace();
                     sendErrorMessage(chatId, "Не удалось сгенерировать изображение."); // Отправляем сообщение об ошибке
