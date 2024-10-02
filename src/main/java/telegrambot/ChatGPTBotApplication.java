@@ -1,5 +1,6 @@
 package telegrambot;
 
+import com.example.telegrambot.ChatGPTBot;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.telegram.telegrambots.meta.TelegramBotsApi;
@@ -14,7 +15,7 @@ public class ChatGPTBotApplication {
 
         try {
             TelegramBotsApi botsApi = new TelegramBotsApi(DefaultBotSession.class);
-            botsApi.registerBot(new com.example.telegrambot.ChatGPTBot()); // Регистрируем бота
+            botsApi.registerBot(new ChatGPTBot()); // Регистрируем бота
         } catch (TelegramApiException e) {
             e.printStackTrace(); // Обработка ошибки при регистрации бота
         }

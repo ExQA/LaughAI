@@ -9,7 +9,7 @@
   <packaging>jar</packaging>
 
   <properties>
-    <java.version>21</java.version> <!-- Замените на вашу версию JDK -->
+    <java.version>21</java.version>
     <spring.boot.version>3.2.0</spring.boot.version> <!-- Замените на актуальную версию Spring Boot -->
     <telegrambots.version>6.5.0</telegrambots.version>
     <okhttp.version>4.9.2</okhttp.version> <!-- Для работы с OpenAI API -->

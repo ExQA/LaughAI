@@ -26,9 +26,7 @@ public class ConfigLoader {
             openAiApiKey = properties.getProperty("openai.api.key");
 
             // Логирование для отладки
-            System.out.println("Bot Token: " + botToken);
             System.out.println("Bot Username: " + botUsername);
-            System.out.println("OpenAI API Key: " + openAiApiKey);
         } catch (IOException ex) {
             ex.printStackTrace();
         }
