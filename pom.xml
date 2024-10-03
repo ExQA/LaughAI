@@ -82,7 +82,7 @@
               <manifest>
                 <addClasspath>true</addClasspath>
                 <classpathPrefix>lib/</classpathPrefix>
-                <mainClass>ctelegrambot.ChatGPTBotApplication</mainClass> <!-- Замените на ваш основной класс -->
+                <mainClass>telegrambot.ChatGPTBotApplication</mainClass> <!-- Замените на ваш основной класс -->
               </manifest>
             </archive>
           </configuration>
